@@ -46,7 +46,7 @@ module.exports.verifyAPIKey = (req, res, next) => {
   }
 
   dbhelper.getUserByApiKey(apiKey)
-
+  
     .then(user => {
       if (!user) {
         return res.status(401).send();
