@@ -16,42 +16,56 @@ var fakeUser = {
   'api_key': 'cat'
 };
 
-//Route to get User by API key, API key verification occurs for all routes
+// Route to get User by API key, API key verification occurs for all routes
 router.route('/api_key')
   .get();
 
-//Route to get Board by repo-url
+// Route to get Board by repo-url
 router.route('/board')
   .get(BoardController.getOneBoardByRepoUrl);
 
+// Route to get Panels for a Board
 router.route('/panels')
   .get(PanelController.getBoardPanels);
 
-router.route('/tickets')
-  .post(TicketController.createPanelTicket);
-
+// Route to fetch and update existing Ticket
 router.route('/ticket')
   .get(TicketController.getOneTicket)
   .post(TicketController.updateTicket);
 
-//Route to get a Tickets for a User
+// Route to get Tickets for a User and create new Ticket
 router.route('/tickets')
-.get(middleware.auth.verifyBoardMemberElse401, TicketController.getUserTicketsByBoard);
+  .get(middleware.auth.verifyBoardMemberElse401, TicketController.getUserTicketsByBoard)
+  .post(TicketController.createPanelTicket);
 
-//Route to get a Tickets for a Panel
+// Route to get Tickets for a Panel
 router.route('/panel/tickets')
-.get(middleware.auth.verifyBoardMemberElse401, TicketController.getPanelTickets);
+  .get(middleware.auth.verifyBoardMemberElse401, TicketController.getPanelTickets);
 
-//Route to get my Tickets for a Panel
+// Route to get my Tickets for a Panel
 router.route('/mypaneltickets')
-.get(middleware.auth.verifyBoardMemberElse401, TicketController.getPanelTicketsByUser);
+  .get(middleware.auth.verifyBoardMemberElse401, TicketController.getPanelTicketsByUser);
 
-//Fake route to get board by repo url
+// Fake route to get board by repo url
 router.route('/fake/board')
-.get(BoardController.getOneBoardByRepoUrl);
+  .get(BoardController.getOneBoardByRepoUrl);
 
-//Fake route to get board by repo url
+// Fake route to get board by repo url
 router.route('/fake/mypaneltickets')
-.get(middleware.auth.verifyBoardMemberElse401, TicketController.getPanelTicketsByUser);
+  .get(middleware.auth.verifyBoardMemberElse401, TicketController.getPanelTicketsByUser);
+
+// Fake route to get panels for a board
+router.route('/fake/panels')
+  .get(PanelController.getBoardPanels);
+
+// Fake route to fetch and update existing Ticket
+router.route('/fake/ticket')
+  .get(middleware.auth.verifyBoardMemberElse401,TicketController.getOneTicket)
+  .post(TicketController.updateTicket);
+
+// Fake route to get Tickets for a User and create new Ticket
+router.route('/fake/tickets')
+  .get(middleware.auth.verifyBoardMemberElse401, TicketController.getUserTicketsByBoard)
+  .post(TicketController.createPanelTicket);
 
 module.exports = router;
