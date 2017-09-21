@@ -26,17 +26,17 @@ router.route('/board')
 
 // Route to get Panels for a Board
 router.route('/panels')
-  .get(PanelController.getBoardPanels);
+  .get(middleware.auth.verifyBoardMemberElse401, PanelController.getBoardPanels);
 
-// Route to fetch and update existing Ticket
+// Route to fetch and create new Ticket
 router.route('/ticket')
-  .get(TicketController.getOneTicket)
-  .post(TicketController.updateTicket);
+  .get(middleware.auth.verifyBoardMemberElse401, TicketController.getOneTicket)
+  .post(middleware.auth.verifyPanelMemberElse401, TicketController.createPanelTicket);
 
-// Route to get Tickets for a User and create new Ticket
+// Route to get Tickets for a User and update existing Tickets
 router.route('/tickets')
   .get(middleware.auth.verifyBoardMemberElse401, TicketController.getUserTicketsByBoard)
-  .post(TicketController.createPanelTicket);
+  .put(middleware.auth.verifyPanelMemberElse401, TicketController.updateTicket);
 
 // Route to get Tickets for a Panel
 router.route('/panel/tickets')
@@ -54,18 +54,18 @@ router.route('/fake/board')
 router.route('/fake/mypaneltickets')
   .get(middleware.auth.verifyBoardMemberElse401, TicketController.getPanelTicketsByUser);
 
-// Fake route to get panels for a board
+// Fake route to get Panels for a Board
 router.route('/fake/panels')
-  .get(PanelController.getBoardPanels);
+  .get(middleware.auth.verifyBoardMemberElse401, PanelController.getBoardPanels);
 
-// Fake route to fetch and update existing Ticket
+// Fake route to fetch and create new Ticket
 router.route('/fake/ticket')
-  .get(middleware.auth.verifyBoardMemberElse401,TicketController.getOneTicket)
-  .post(TicketController.updateTicket);
+  .get(middleware.auth.verifyBoardMemberElse401, TicketController.getOneTicket)
+  .post(middleware.auth.verifyPanelMemberElse401, TicketController.createPanelTicket);
 
-// Fake route to get Tickets for a User and create new Ticket
+// Fake route to get Tickets for a User and update existing Tickets
 router.route('/fake/tickets')
   .get(middleware.auth.verifyBoardMemberElse401, TicketController.getUserTicketsByBoard)
-  .post(TicketController.createPanelTicket);
+  .put(middleware.auth.verifyPanelMemberElse401, TicketController.updateTicket);
 
 module.exports = router;

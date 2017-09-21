@@ -81,6 +81,21 @@ module.exports.getUserById = function(userId) {
     });
 };
 
+module.exports.getUserByHandle = function(handle) {
+  return User.forge({github_handle: handle})
+    .fetch()
+    .then(user => {
+      if (!user) {
+        throw 'invalid user';
+      }
+      return user.toJSON();
+    })
+    .catch(situation => {
+      console.log(`There is a situation: user ${handle} does not exist!`);
+      throw situation;
+    });
+};
+
 module.exports.getUserByApiKey = function(apiKey) {
   return User.forge({api_key: apiKey})
     .fetch()
@@ -91,7 +106,7 @@ module.exports.getUserByApiKey = function(apiKey) {
       return user.toJSON({hidden: []});
     })
     .catch(situation => {
-      console.log(`There is a situation: user API key does not exist!`);
+      console.log('There is a situation: user API key does not exist!');
       throw situation;
     });
 };
@@ -320,7 +335,7 @@ module.exports.getInvitees = function() {
       var promiseArray = users.map(eachUser => eachUser.fetch({withRelated: [
         {invitedToBoards: function(query) {
           //query.whereRaw('last_email = "null"');
-          query.where('last_email', null).orWhereRaw(`last_email < now()-INTERVAL '2 days'`);
+          query.where('last_email', null).orWhereRaw('last_email < now()-INTERVAL \'2 days\'');
         }}
       ]}));
       return Promise.all(promiseArray);
@@ -690,7 +705,7 @@ module.exports.getTicketById = function(ticketId) {
 
 module.exports.getTicketsByUserHandleAndBoard = function(userHandle, boardId) {
   return User.forge({github_handle: userHandle})
-  .fetch({withRelated: [{ assignedTickets: function(query) {query.where({board_id: boardId}).orderBy('id', 'ASC'); }}]})
+    .fetch({withRelated: [{ assignedTickets: function(query) { query.where({board_id: boardId}).orderBy('id', 'ASC'); }}]})
     .then((user) => {
       if (!user) {
         throw 'invalid user';
