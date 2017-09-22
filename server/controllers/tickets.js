@@ -173,8 +173,6 @@ module.exports.updateTicket = (req, res) => {
   // These included in request from CLI; removing from ticket being stored in DB
   delete ticketObj.api_key;
   delete ticketObj.user_id;
-  delete ticketObj.id;
-  delete ticketObj.panel_id;
 
   var validKeys = {
     'id': true,
@@ -186,7 +184,7 @@ module.exports.updateTicket = (req, res) => {
     'creator_id': true,
     'assignee_handle': true,
     'board_id': true,
-    'panel_id': true,
+    'panel_id': true
   };
   for (var key in ticketObj) {
     if (ticketObj.hasOwnProperty(key)) {

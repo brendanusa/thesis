@@ -92,7 +92,7 @@ module.exports.getUserById = function(userId) {
       if (!user) {
         throw 'invalid user';
       }
-      return user.toJSON();
+      return user.toJSON({hidden: []});
     })
     .catch(situation => {
       console.log(`There is a situation: user ID ${userId} does not exist!`);
@@ -354,7 +354,7 @@ module.exports.getInvitees = function(unhide=false) {
       var promiseArray = users.map(eachUser => eachUser.fetch({withRelated: [
         {invitedToBoards: function(query) {
           //query.whereRaw('last_email = "null"');
-          query.where('last_email', null).orWhereRaw('last_email < now()-INTERVAL \'2 days\'');
+          query.where('last_email', null).orWhereRaw(`last_email < now()-INTERVAL \'2 days\'`);
         }}
       ]}));
       return Promise.all(promiseArray);
